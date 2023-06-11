@@ -4,8 +4,7 @@
     "dev": "mix watch --hot",
     "watch": "mix watch",
     "build": "mix --production",
-    "eslint": "eslint --fix --ext .js,.vue resources/js",
-    "postinstall": "npm run production"
+    "eslint": "eslint --fix --ext .js,.vue resources/js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
