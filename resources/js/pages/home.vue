@@ -6,10 +6,9 @@
         <ul>
           <li v-for="character, i in characters" :key="i">
             {{ characters[i].name }}
-            <select label="favorito">
-              <option value="true">true</option>
-              <option value="false" selected>false</option>
-            </select>
+            <button @click="toggleFavorito(i)">
+              {{ isFavorito(i) ? 'Quitar de favoritos' : 'Agregar a favoritos' }}
+            </button>
             <!-- <img :src=" characters[i].image " alt=""> -->
           </li>
         </ul>
@@ -25,6 +24,7 @@ export default {
   data () {
     return {
       characters: [],
+      favoritos: [],
       select: ''
     }
   },
@@ -32,6 +32,24 @@ export default {
     this.fetchCharacters()
   },
   methods: {
+    toggleFavorito (characterId) {
+      const isFavorito = this.favoritos[characterId]
+
+      axios.post(`/api/favoritos/${characterId}`)
+        .then(response => {
+          if (isFavorito) {
+            this.$delete(this.favoritos, characterId)
+          } else {
+            this.$set(this.favoritos, characterId, true)
+          }
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+    isFavorito (index) {
+      return this.favoritos.includes(index)
+    },
     fetchCharacters () {
       axios.get('https://rickandmortyapi.com/api/character')
         .then(response => {
