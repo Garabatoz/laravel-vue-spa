@@ -42,9 +42,9 @@ export default {
   created () {
     this.fetchCharacters()
   },
-  mounted () {
+  /* mounted () {
     this.fetchFavoritos()
-  },
+  }, */
   methods: {
     fetchFavoritos () {
       axios.get('api/favoritos')
