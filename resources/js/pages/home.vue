@@ -6,37 +6,45 @@
         <ul>
           <li v-for="character, i in characters" :key="i">
             {{ i+1 }} {{ characters[i].name }}
-            <button @click="toggleFavorito(characters[i].id)" :class="{ 'btn-green': !isFavorito, 'btn-red': isFavorito }">
+            <button @click="toggleFavorito(characters[i].id)">
               {{ isFavorito(characters[i].id) ? 'Eliminar de favoritos' : 'Agregar a favoritos' }}
             </button>
-            <!-- <button
-              v-if="isFavorito(characters[i].id)"
-              @click="eliminarFavorito"
-            >
-              Eliminar de favoritos
-            </button>
-            <button
-              v-else
-              @click="toggleFavorito(characters[i].id)"
-            >
-              Agregar a favoritos
-            </button> -->
+            <button @click="showCharacterDetails(characters[i])">Detalles</button>
           </li>
         </ul>
       </card>
+      <div v-if="selectedCharacter">
+        <h3>Nombre: {{ selectedCharacter.name }}</h3>
+        <img :src="selectedCharacter.image">
+        <p>Estado: {{ selectedCharacter.status }}</p>
+        <p>Especie: {{selectedCharacter.species}}</p>
+        <!-- Agrega más detalles o información sobre el personaje según tus necesidades -->
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Vue from 'vue'
+import VModal from 'vue-js-modal'
+
+Vue.use(VModal, {
+  dynamicDefaults: {
+    draggable: true,
+    resizable: true,
+    height: 'auto'
+  }
+})
 
 export default {
   data () {
     return {
       characters: [],
       favoritos: [],
-      select: ''
+      select: '',
+      showModal: false,
+      selectedCharacter: null
     }
   },
   created () {
@@ -46,6 +54,11 @@ export default {
     this.fetchFavoritos()
   }, */
   methods: {
+    showCharacterDetails (character) {
+      console.log(character)
+      this.selectedCharacter = character
+      this.showModal = true
+    },
     fetchFavoritos () {
       axios.get('api/favoritos')
         .then(response => {
@@ -67,7 +80,7 @@ export default {
         })
     },
     isFavorito (characterId) {
-      return this.favoritos.includes(characterId)
+      /* return this.favoritos.includes(characterId) */
     },
     fetchCharacters () {
       axios.get('https://rickandmortyapi.com/api/character')
