@@ -1,30 +1,36 @@
 <?php
 namespace App\Http\Controllers\Settings;
-use Illuminate\Http\Request;
+
+
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Favorite;
+use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
     public function toggleFavorito($characterId)
     {
-        if (Auth::check()) {
-            return response()->json(['success' => true]);
-        }else{
-            return response()->json(['success' => false]);
-        }
-      /*
-        $favorito = Favorite::where('character_id', $characterId)
+        $user = Auth::user();        
+        $favorito = Favorite::where('ref_id', $characterId)
             ->where('user_id', $user->id)
             ->first();
+            
         if ($favorito) {
             $favorito->delete();
+            return response()->json(['success' => 'Favorito eliminado']);
         } else {
             Favorite::create([
-                'character_id' => $characterId,
+                'ref_id' => $characterId,
                 'user_id' => $user->id,
             ]);
+            return response()->json(['success' => 'Favorito agregado']);
         }
-        return response()->json(['success' => true]);*/
-        dd($characterId);
     }
+    public function getFavoritos()
+        {
+            $user = Auth::user();
+            $favoritos = Favorite::where('user_id', $user->id)->get();
+            return response()->json(['favoritos' => $favoritos]);
+        }
 }

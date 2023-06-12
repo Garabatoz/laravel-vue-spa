@@ -27,9 +27,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', [LoginController::class, 'logout']);
 
     Route::get('user', [UserController::class, 'current']);
-
     Route::patch('settings/profile', [ProfileController::class, 'update']);
     Route::patch('settings/password', [PasswordController::class, 'update']);
+    Route::post('toggle-favorito/{characterId}', [FavoriteController::class, 'toggleFavorito']);
+    Route::get('favoritos', [FavoriteController::class, 'getFavoritos']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {
@@ -42,7 +43,7 @@ Route::group(['middleware' => 'guest:api'], function () {
     Route::post('email/verify/{user}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('email/resend', [VerificationController::class, 'resend']);
 
-    Route::post('favoritos/{user_id}', [FavoriteController::class, 'toggleFavorito']);
+
 
     Route::post('oauth/{driver}', [OAuthController::class, 'redirect']);
     Route::get('oauth/{driver}/callback', [OAuthController::class, 'handleCallback'])->name('oauth.callback');

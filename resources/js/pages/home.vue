@@ -5,11 +5,22 @@
         {{ $t('you_are_logged_in') }}
         <ul>
           <li v-for="character, i in characters" :key="i">
-            {{ characters[i].name }}
-            <button @click="toggleFavorito(i)">
-              {{ isFavorito(i) ? 'Quitar de favoritos' : 'Agregar a favoritos' }}
+            {{ i+1 }} {{ characters[i].name }}
+            <button @click="toggleFavorito(characters[i].id)" :class="{ 'btn-green': !isFavorito, 'btn-red': isFavorito }">
+              {{ isFavorito(characters[i].id) ? 'Eliminar de favoritos' : 'Agregar a favoritos' }}
             </button>
-            <!-- <img :src=" characters[i].image " alt=""> -->
+            <!-- <button
+              v-if="isFavorito(characters[i].id)"
+              @click="eliminarFavorito"
+            >
+              Eliminar de favoritos
+            </button>
+            <button
+              v-else
+              @click="toggleFavorito(characters[i].id)"
+            >
+              Agregar a favoritos
+            </button> -->
           </li>
         </ul>
       </card>
@@ -31,24 +42,32 @@ export default {
   created () {
     this.fetchCharacters()
   },
+  mounted () {
+    this.fetchFavoritos()
+  },
   methods: {
-    toggleFavorito (characterId) {
-      const isFavorito = this.favoritos[characterId]
-
-      axios.post(`/api/favoritos/${characterId}`)
+    fetchFavoritos () {
+      axios.get('api/favoritos')
         .then(response => {
-          if (isFavorito) {
-            this.$delete(this.favoritos, characterId)
-          } else {
-            this.$set(this.favoritos, characterId, true)
-          }
+          this.favoritos = response.data
         })
         .catch(error => {
           console.error(error)
         })
     },
-    isFavorito (index) {
-      return this.favoritos.includes(index)
+    toggleFavorito (characterId) {
+      console.log(characterId)
+      axios.post(`/api/toggle-favorito/${characterId}`)
+        .then(response => {
+          // Actualizar la lista de favoritos después de agregar o eliminar
+          this.fetchFavoritos()
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+    isFavorito (characterId) {
+      return this.favoritos.includes(characterId)
     },
     fetchCharacters () {
       axios.get('https://rickandmortyapi.com/api/character')
