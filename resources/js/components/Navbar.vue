@@ -11,12 +11,15 @@
 
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="navbar-nav">
-          <locale-dropdown />
           <!-- <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
           </li> -->
         </ul>
-
+        <ul class="navbar-nav">
+          <router-link :to="{ name: 'characters' }" class="nav-link" active-class="active">
+            Characters
+          </router-link>
+        </ul>
         <ul class="navbar-nav ms-auto">
           <!-- Authenticated -->
           <li v-if="user" class="nav-item dropdown">
@@ -40,6 +43,7 @@
             </div>
           </li>
           <!-- Guest -->
+          
           <template v-else>
             <li class="nav-item">
               <router-link :to="{ name: 'login' }" class="nav-link" active-class="active">
@@ -51,7 +55,10 @@
                 {{ $t('register') }}
               </router-link>
             </li>
+            <li class="nav-item">
+            </li>
           </template>
+          <locale-dropdown />
         </ul>
       </div>
     </div>
@@ -61,6 +68,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import LocaleDropdown from './LocaleDropdown'
+import Characters from '../pages/characters/index.vue'
 
 export default {
   components: {
