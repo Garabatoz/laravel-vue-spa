@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Favorite;
 use App\Notifications\ResetPassword;
 use App\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -114,5 +115,9 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
     }
 }

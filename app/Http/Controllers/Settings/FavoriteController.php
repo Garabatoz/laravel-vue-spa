@@ -30,7 +30,8 @@ class FavoriteController extends Controller
     public function getFavoritos()
         {
             $user = Auth::user();
-            $favoritos = Favorite::where('user_id', $user->id)->get();
-            return response()->json(['favoritos' => $favoritos]);
+            $favoriteIds = $user->favorites()->pluck('ref_id');
+            /* $favoritos = Favorite::where('user_id', $user->id)->get(); */
+            return response()->json(['favoritos' => $favoriteIds]);
         }
 }
