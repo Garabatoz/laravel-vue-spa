@@ -6,7 +6,7 @@
                 {{ i+1 }} {{ characters[i].name }}
             </Card>
         </div>
-        <modal name="my-first-modal" 
+        <!-- <modal name="my-first-modal" 
             :width="800"
             :height="600"
             :adaptive="true" 
@@ -24,8 +24,8 @@
             <button @click="toggleFavorito(selectedCharacter.id)">
                 {{ isFavorito(selectedCharacter.id) ? 'Eliminar de favoritos' : 'Agregar a favoritos' }}
             </button>
-            <!-- Agrega más detalles o información sobre el personaje según tus necesidades -->
-        </modal>
+         Agrega más detalles o información sobre el personaje según tus necesidades 
+        </modal> -->
       </div>
     </div>
   </template>
@@ -45,15 +45,19 @@ Vue.use(modal)
     data () {
       return {
         characters: [],
+        favoritosIds: [],
         favoritos: [],
-        select: '',
+        /* select: '',
         showModal: false,
-        selectedCharacter: null
+        selectedCharacter: null */
       }
     },
-    created () {
-      this.fetchCharacters()
-      this.$modal.show('my-first-modal')
+    mounted () {
+        this.fetchFavoritos()
+        console.log(JSON.stringify(this.favoritosIds))
+    },
+    watch:{
+        
     },
     /* mounted () {
       this.fetchFavoritos()
@@ -64,42 +68,36 @@ Vue.use(modal)
         this.$modal.show('my-first-modal')
       },
       fetchFavoritos () {
+        var val = [];
         axios.get('api/favoritos')
           .then(response => {
-            this.favoritos = response.data
-          })
-          .catch(error => {
+            console.log(JSON.stringify(response.data))
+            val = (response.data)            
+            this.fetchCharacters(val)
+        })
+        .catch(error => {
             console.error(error)
-          })
-      },
-      toggleFavorito (characterId) {
-        console.log(characterId)
-        axios.post(`/api/toggle-favorito/${characterId}`)
-          .then(response => {
-            // Actualizar la lista de favoritos después de agregar o eliminar
-            this.fetchFavoritos()
-          })
-          .catch(error => {
-            console.error(error)
-          })
-      },
-      isFavorito (characterId) {
-        /* return this.favoritos.includes(characterId) */
-      },
-      fetchCharacters () {
-        axios.get('https://rickandmortyapi.com/api/character')
-          .then(response => {
-            this.characters = response.data.results
-          })
-          .catch(error => {
-            console.error(error)
-          })
-      }
+        })
+        this.favoritos = val
+        console.log(JSON.stringify(this.favoritos))  
     },
+    fetchCharacters(val) {
+          val.forEach(id => {
+            console.log(id)
+            axios.get(`https://rickandmortyapi.com/api/character/${id}`)
+                .then(response => {
+                this.characters.push(response.data)
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        });
+        },    
     metaInfo () {
       return { title: this.$t('home') }
     }
   }
+}
   </script>
     <style>
     .button_modal {

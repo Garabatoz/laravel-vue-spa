@@ -20,6 +20,11 @@
             Characters
           </router-link>
         </ul>
+        <ul class="navbar-nav">
+          <router-link :to="{ name: 'favorites' }" class="nav-link" active-class="active">
+            Favorites
+          </router-link>
+        </ul>
         <ul class="navbar-nav ms-auto">
           <!-- Authenticated -->
           <li v-if="user" class="nav-item dropdown">
